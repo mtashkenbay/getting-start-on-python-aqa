@@ -15,14 +15,15 @@ class MyInfoPage(BasePage):
     SPINNER_CONTAINER = (By.CSS_SELECTOR,'.oxd-loading-spinner-container')
     SPINNER_LOADER = (By.CSS_SELECTOR,'.oxd-loading-spinner')
 
-
     def input_firstname(self, new_name):
         with allure.step(f"Change name to '{new_name}'"):
-            self.wait.until(
-                EC.invisibility_of_element_located(self.SPINNER_LOADER))
+            self.wait.until(EC.invisibility_of_element_located(self.SPINNER_LOADER))
             first_name_field = self.wait.until(EC.element_to_be_clickable(self.FIRSTNAME_INPUT))
-            first_name_field.send_keys(Keys.COMMAND + "A")
-            first_name_field.send_keys(Keys.BACKSPACE)
+            first_name_field.click()
+            current_value = first_name_field.get_attribute("value")
+            if current_value:
+                first_name_field.send_keys(Keys.BACKSPACE * len(current_value))
+
             first_name_field.send_keys(new_name)
             self.name = new_name
 
